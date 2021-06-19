@@ -5,9 +5,7 @@ from rdkit import Chem
 from rdkit.Chem.Draw import IPythonConsole
 from rdkit.Chem import PandasTools
 import numpy as np
-from sklearn.model_selection import train_test_split
 from sklearn.svm import SVR
-from sklearn.model_selection import cross_val_score, cross_val_predict, cross_validate
 from sklearn import metrics
 from sklearn.metrics import explained_variance_score
 import matplotlib.pyplot as plt
@@ -86,7 +84,7 @@ if __name__ == "__main__":
 
     from cross_validator import CrossValidator
     
-    cv = CrossValidator(morgan_matrix=morgan_matrix, activity=activity)
+    cv = CrossValidator(morgan_matrix=morgan_matrix, activity=activity, smiles=smiles, id=id)
 
-    cv.start()
+    cv.start(10)
 
