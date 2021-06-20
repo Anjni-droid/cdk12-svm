@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 # Load the dataframe from a .csv file, stores the smiles strings for our compound and their PIC50a ctivities
 # Load the dataframe from a .csv file, stores the smiles strings for our compound and their PIC50a ctivities
 #
-data = pd.read_csv('dummy_data.csv')
+data = pd.read_csv('CDK12_Data.csv')
 smiles = np.array(data['SMILES'])
 ID = np.array(data['ID'])
 activity = np.array(data['pValue'])
@@ -113,6 +113,13 @@ for i in range(10):
 	
     train_features, test_features, train_targets, test_targets = train_test_split(features_cross, targets_cross, test_size = 0.10, random_state=i, shuffle=True)
 
+    if not regressor:
+            print('reg')
+    elif not train_features:
+        print('feat')
+    elif not train_targets:
+        print('tars')
+    exit(0)
     scores = cross_validate(regressor, train_features, train_targets, cv=20, scoring=('r2', 'explained_variance'), return_train_score=True)
 
     print('The cross-validated variance for loop '+str(i)+' is:', scores['test_explained_variance'].mean())

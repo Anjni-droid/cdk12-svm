@@ -8,9 +8,10 @@ import numpy as np
 from sklearn.svm import SVR
 from sklearn import metrics
 from sklearn.metrics import explained_variance_score
-import matplotlib.pyplot as plt
 
 
+from cross_validator import CrossValidator
+from plot_handler import PlotHandler
 
 def generate_fp_matrix(smiles):
     '''
@@ -52,7 +53,7 @@ def generate_regressor():
     ''' 
     Define the regressor to be used in our model. 
     
-    Here a Supporting Vectot Machine is chosen. 
+    Here a Supporting Vector Machine is chosen. 
     Hyperparameters were optimized in a different step through a grid search.
 
     TODO: Optimise hyperparameters locally
@@ -71,8 +72,9 @@ if __name__ == "__main__":
     # Setup VS Code
     # Organise code in Object Oriented Programming fashion (OOP)
     # Handle range input via command linep
+    
     ''' Load input data '''
-    data = pd.read_csv('dummy_data.csv')
+    data = pd.read_csv('CDK12_Data.csv')
     
     ''' Split data into arrays '''
     smiles = np.array(data['SMILES'])
@@ -81,10 +83,29 @@ if __name__ == "__main__":
 
     morgan_matrix = generate_fp_matrix(smiles)
     regressor = generate_regressor()
-
-    from cross_validator import CrossValidator
     
-    cv = CrossValidator(morgan_matrix=morgan_matrix, activity=activity, smiles=smiles, id=id)
+    cv_collection = []
 
-    cv.start(10)
+    # Run the script for a set amount of time
+    for i in range(10):
+        if morgan_matrix.size == 0:
+            print('morgan')
+        elif activity.size == 0:
+            print('activity')
+        elif smiles.size == 0:
+            print('smiles')
+        elif not regressor:
+            print('reg')
+        elif not id:
+            print('id')
+        cv_collection.append(CrossValidator(morgan_matrix=morgan_matrix, 
+                                            activity=activity, 
+                                            smiles=smiles, 
+                                            regressor=regressor,
+                                            id=id,
+                                            itter=i))
 
+    ph = PlotHandler(cv_collection)
+
+    ph.plot_all()
+    
