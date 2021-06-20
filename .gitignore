@@ -114,4 +114,4 @@ dmypy.json
 .pyre/
 predict1.png
 *.png
-*.csv
+predictions_*.csv
