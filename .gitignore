@@ -115,3 +115,4 @@ dmypy.json
 predict1.png
 *.png
 predictions_*.csv
+test_targets*.csv

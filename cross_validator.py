@@ -106,26 +106,26 @@ class CrossValidator:
     def _save_diff(self):
         
         with open('predictions_'+str(self.itter)+'.csv', 'w') as file:
-            file.write('train_targets, predictions, errors\n')
+            file.write('morgan, pValue, predictions, errors\n')
 
             for i in range(len(self.predictions_cv)):
-                file.write( str(self.train_targets[i]) + "," + 
+                file.write( str(self.morgan[i]) + "," +
+                            str(self.train_targets[i]) + "," + 
                             str(self.predictions_cv[i]) + "," + 
-                            str(abs(self.predictions_cv[i] - self.train_targets[i])))
-            file.write(' \n')
+                            str(abs(self.predictions_cv[i] - self.train_targets[i])) + "\n")
+           
 
     def _save_targets(self):
 
         with open('test_targets'+str(self.itter)+'.csv', 'w') as file:
-            file.write('SMILES, ID, test_features, test_targets\n')
+            file.write('morgan, test_features, pValue\n')
             
             for i in range(len(self.test_targets)):
-                file.write(str(self.smiles[i]) + "," +
-					   str(self.id[i]) + "," +
+                file.write(str(self.morgan[i]) + "," + 
 					   str(self.test_features[i]) + ","+
-					   str(self.test_targets[i]))
+					   str(self.test_targets[i]) + "\n")
 
-            file.write(' \n')
+            
 
     def _binary_convert(self, data, thresh):
 
