@@ -78,7 +78,7 @@ if __name__ == "__main__":
     
     ''' Split data into arrays '''
     smiles = np.array(data['SMILES'])
-    ID = np.array(data['ID'])
+    id = np.array(data['ID'])
     activity = np.array(data['pValue'])
 
     morgan_matrix = generate_fp_matrix(smiles)
@@ -88,16 +88,7 @@ if __name__ == "__main__":
 
     # Run the script for a set amount of time
     for i in range(10):
-        if morgan_matrix.size == 0:
-            print('morgan')
-        elif activity.size == 0:
-            print('activity')
-        elif smiles.size == 0:
-            print('smiles')
-        elif not regressor:
-            print('reg')
-        elif not id:
-            print('id')
+        
         cv_collection.append(CrossValidator(morgan_matrix=morgan_matrix, 
                                             activity=activity, 
                                             smiles=smiles, 

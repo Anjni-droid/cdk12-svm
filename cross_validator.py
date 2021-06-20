@@ -59,29 +59,19 @@ class CrossValidator:
     def _start(self):
         print ('----------------------'+ 'loop '+str(self.itter)+ '----------------------')
 
-        
-        if self.morgan.size == 0:
-            print('morgan')
-        elif self.activity.size == 0:
-            print('activity')
-
         # Splits input data and assigns it to class variables
-        self.train_features, 
-        self.test_features, 
-        self.train_targets, 
-        self.test_targets = train_test_split(
+        train_features, test_features, train_targets, test_targets = train_test_split(
                                 np.array(self.morgan),
                                 np.array(self.activity),
                                 test_size = 0.10,
-                                random_state=1,
+                                random_state=self.itter,
                                 shuffle=True)
 
-        if not self.regressor:
-            print('reg')
-        elif not self.train_features:
-            print('feat')
-        elif not self.train_targets:
-            print('tars')
+        self.train_features = train_features  
+        self.test_features = test_features  
+        self.train_targets = train_targets  
+        self.test_targets = test_targets 
+
         
         scores = cross_validate(
                     self.regressor, 
@@ -90,15 +80,14 @@ class CrossValidator:
                     cv=20, 
                     scoring=('r2', 'explained_variance'),
                     return_train_score=True)
-
-        self._report_cv(scores)
-        self._report_diff()
-
         
         self.predictions_cv = cross_val_predict(self.regressor,
                                                 self.train_features,
                                                 self.train_targets, 
                                                 cv=20)
+
+        self._report_cv(scores)
+        self._report_diff()
 
         self._save_diff()
         self._save_targets()
@@ -115,7 +104,8 @@ class CrossValidator:
 
     def _report_diff(self):
         
-        errors_cv = abs(self.predictions - self.targets)
+        errors_cv = abs(self.predictions_cv - self.train_targets)
+
         print ('Calculating CV Mean Absolute Error for loop '+str(self.itter))
         print('Mean CV-Absolute Error:', round(np.mean(errors_cv), 2), 'units.')
         print('Standard error:',  round(np.std(errors_cv), 2) )
@@ -123,26 +113,27 @@ class CrossValidator:
 
     def _save_diff(self):
         
-        with open('predictions_'+str(self.itter)+'.csv') as file:
+        with open('predictions_'+str(self.itter)+'.csv', 'w') as file:
             file.write('train_targets, predictions, errors\n')
 
             for i in range(len(self.predictions_cv)):
-                file.write( str(self.train_targets[i]) + "," +
-                                str(self.predictions_cv[i]) + "," +
-                                str(abs(self.predictions_cv[i] - self.train_targets[i])) + 
-                                "\n")
+                file.write( str(self.train_targets[i]) + "," + 
+                            str(self.predictions_cv[i]) + "," + 
+                            str(abs(self.predictions_cv[i] - self.train_targets[i])))
+            file.write(' \n')
 
     def _save_targets(self):
 
-        with open('test_targets'+str(self.itter)+'.csv') as file:
+        with open('test_targets'+str(self.itter)+'.csv', 'w') as file:
             file.write('SMILES, ID, test_features, test_targets\n')
             
             for i in range(len(self.test_targets)):
-                file.write(str(self.smiles[i])        + "," +
-                        str(self.id[i])            + "," +
-                        str(self.test_features[i]) + "," +
-                        str(self.test_targets[i]))
-                file.write(' \n')
+                file.write(str(self.smiles[i]) + "," +
+					   str(self.id[i]) + "," +
+					   str(self.test_features[i]) + ","+
+					   str(self.test_targets[i]))
+
+            file.write(' \n')
 
     def _binary_convert(self, data, thresh):
 

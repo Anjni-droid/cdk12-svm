@@ -113,13 +113,6 @@ for i in range(10):
 	
     train_features, test_features, train_targets, test_targets = train_test_split(features_cross, targets_cross, test_size = 0.10, random_state=i, shuffle=True)
 
-    if not regressor:
-            print('reg')
-    elif not train_features:
-        print('feat')
-    elif not train_targets:
-        print('tars')
-    exit(0)
     scores = cross_validate(regressor, train_features, train_targets, cv=20, scoring=('r2', 'explained_variance'), return_train_score=True)
 
     print('The cross-validated variance for loop '+str(i)+' is:', scores['test_explained_variance'].mean())
@@ -134,7 +127,7 @@ for i in range(10):
     errors_cv = abs(predictions_cv - train_targets)
 
 ### Save experimental vs predicted data
-    with open('predictions_'+str(i)+'.csv') as the_file:
+    with open('predictions_'+str(i)+'.csv', 'w') as the_file:
        l=len(predictions_cv)
        the_file.write('train_targets, predictions, errors\n')
        for ii in range(l):
@@ -143,7 +136,7 @@ for i in range(10):
             the_file.write(' \n')
 
 ### Save test targets
-    with open('test_targets'+str(i)+'.csv') as the_file:
+    with open('test_targets'+str(i)+'.csv', 'w') as the_file:
       l=len(test_targets)
       the_file.write('SMILES, ID, test_features, test_targets\n')
       for ii in range(l):

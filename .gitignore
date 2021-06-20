@@ -112,3 +112,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+predict1.png
+*.png
+*.csv

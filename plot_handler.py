@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn import metrics
 
 class PlotHandler:
     def __init__(self, cv_collection):
@@ -14,10 +15,10 @@ class PlotHandler:
     def plot_all(self):
         ''' Plots the next cv '''
 
-        for cv in self.cv_collection:
-            self.plot_one(cv)
+        for itter, cv in enumerate(self.cv_collection):
+            self._plot(cv, itter)
     
-    def _plot(self, cv):
+    def _plot(self, cv, itter):
         ''' Plot a graph of our cross-validated predictions vs actual values.
         
         Args:
@@ -32,8 +33,6 @@ class PlotHandler:
         plt.plot(x, cv.predictions_cv, 
                 marker='', color='red', linewidth=1.0, label='predicted')
         
-        print('The AUC score for loop '+str(i)+'is: ' + str(metrics.auc(fpr, tpr)))
-
         plt.savefig('predict'+str(cv.itter)+'.png', dpi=600)
         
         plt.legend()
